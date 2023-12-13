@@ -4,19 +4,12 @@ using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewModel
 {
-  public partial class MainViewModel: ObservableObject
+  public partial class MainViewModel : ObservableObject
   {
     IConnectivity connectivity;
 
     [ObservableProperty]
-    bool isPlatformWindows;
-
-    public MainViewModel(IConnectivity connectivity, IDeviceInfo info)
-    {
-      Items = new ObservableCollection<string>();
-      this.connectivity = connectivity;
-      isPlatformWindows = info.Platform == DevicePlatform.WinUI;
-    }
+    bool isPlatformNotMobile;
 
     [ObservableProperty]
     ObservableCollection<string> items;
@@ -24,10 +17,20 @@ namespace MauiApp1.ViewModel
     [ObservableProperty]
     string text;
 
+    public MainViewModel(IConnectivity connectivity, IDeviceInfo info)
+    {
+      Items = new ObservableCollection<string>();
+      this.connectivity = connectivity;
+      isPlatformNotMobile = info.Platform == DevicePlatform.WinUI
+                || info.Platform == DevicePlatform.macOS
+                || info.Platform == DevicePlatform.MacCatalyst;
+    }
+
     [RelayCommand]
+    [Obsolete]
     async Task Add()
     {
-      if (string.IsNullOrWhiteSpace(text)) return;
+      if (string.IsNullOrWhiteSpace(Text)) return;
 
       if (connectivity.NetworkAccess != NetworkAccess.Internet)
       {
@@ -35,14 +38,23 @@ namespace MauiApp1.ViewModel
         return;
       }
 
-      Items.Add(text);
+      Items.Add(Text);
       Text = string.Empty;
     }
 
     [RelayCommand]
     void Delete(string s)
     {
-      if (items.Contains(s))
+      if (Items.Contains(s))
+      {
+        Items.Remove(s);
+      }
+    }
+
+    [RelayCommand]
+    void ButtonDelete(string s)
+    {
+      if (Items.Contains(s))
       {
         Items.Remove(s);
       }

@@ -52,7 +52,7 @@
                     BackgroundColor="Black"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=DeleteCommand}"
                     CommandParameter="{Binding .}"
-                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=IsPlatformWindows}"/>
+                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=IsPlatformNotMobile}"/>
                 </Grid>
                </Frame>
             </Grid>
