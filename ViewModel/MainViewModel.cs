@@ -7,9 +7,7 @@ namespace MauiApp1.ViewModel
   public partial class MainViewModel : ObservableObject
   {
     IConnectivity connectivity;
-
-    [ObservableProperty]
-    bool isPlatformNotMobile;
+    IDeviceInfo info;
 
     [ObservableProperty]
     ObservableCollection<string> items;
@@ -21,9 +19,7 @@ namespace MauiApp1.ViewModel
     {
       Items = new ObservableCollection<string>();
       this.connectivity = connectivity;
-      isPlatformNotMobile = info.Platform == DevicePlatform.WinUI
-                || info.Platform == DevicePlatform.macOS
-                || info.Platform == DevicePlatform.MacCatalyst;
+      this.info = info;
     }
 
     [RelayCommand]
@@ -52,12 +48,15 @@ namespace MauiApp1.ViewModel
     }
 
     [RelayCommand]
-    void ButtonDelete(string s)
+    async Task Info()
     {
-      if (Items.Contains(s))
-      {
-        Items.Remove(s);
-      }
+      await Shell.Current.DisplayAlert("Platform info.", info.Platform.ToString(), "OK");
+    }
+
+    [RelayCommand]
+    void Clear()
+    {
+      Items?.Clear();
     }
 
     [RelayCommand]
